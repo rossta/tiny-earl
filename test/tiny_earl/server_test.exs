@@ -6,9 +6,11 @@ defmodule TinyEarl.ServerTest do
     assert {:ok, _pid} = Server.start_link()
   end
 
-  # test "shorten new url" do
-  #   assert {:ok, pid} = Server.start_link()
-  #   url = Server.shorten("http://example.org", 123)
-  #   assert url == "ex"
-  # end
+  test ".add_url adds a shortened link to link domain" do
+    assert {:ok, pid} = Server.start_link()
+    domain = Server.add_url(pid, "http://example.org")
+    assert domain.entries |> Map.keys |> length == 1
+    [link | _rest] = domain.entries |> Map.values
+    assert link.url == "http://example.org"
+  end
 end

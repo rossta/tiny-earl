@@ -7,7 +7,6 @@ defmodule TinyEarl.LinkTest do
     %Link{url: url, token: token, uuid: uuid} = link
     assert url == "url"
     assert token == "token"
-    assert uuid == 123
   end
 
   test ".shorten produces a new token and uuid from url" do
