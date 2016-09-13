@@ -10,4 +10,6 @@ defmodule TinyEarl.LinkDomain do
     new_entries = Map.put(entries, link.token, link)
     %LinkDomain{ link_domain | entries: new_entries }
   end
+
+  def entries(%LinkDomain{entries: entries}), do: entries
 end
