@@ -1,5 +1,5 @@
 defmodule TinyEarl.CacheTest do
-  use ExUnit.Case, async: false
+  use ExUnit.Case, async: true
   import TinyEarl.TestCleaner
 
   alias TinyEarl.{Cache, Server, Database}
