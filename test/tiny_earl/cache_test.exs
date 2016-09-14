@@ -1,6 +1,12 @@
 defmodule TinyEarl.CacheTest do
-  use ExUnit.Case
-  alias TinyEarl.{Cache, Server}
+  use ExUnit.Case, async: false
+  alias TinyEarl.{Cache, Server, Database}
+
+  setup do
+    on_exit fn ->
+      File.rm_rf!("./data/test")
+    end
+  end
 
   test ".server_process returns pid of server by name" do
     {:ok, cache} = Cache.start

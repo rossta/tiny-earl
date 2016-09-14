@@ -1,44 +1,40 @@
 defmodule TinyEarl.Database do
   use GenServer
 
-  def start(db_folder) do
-    GenServer.start(__MODULE__, db_folder, name: :tiny_earl_db)
+  def start({db_folder, worker}) do
+    GenServer.start(__MODULE__, {db_folder, worker}, name: :tiny_earl_db)
   end
 
-  def stop do
-    GenServer.stop(:tiny_earl_db)
+  def start(db_folder) do
+    start({db_folder, TinyEarl.DatabaseWorker})
   end
 
   def store(key, data) do
-    GenServer.call(:tiny_earl_db, {:store, key, data})
+    {pid, worker} = key |> choose_worker
+    worker.store(pid, key, data)
   end
 
   def get(key) do
-    GenServer.call(:tiny_earl_db, {:get, key})
+    {pid, worker} = key |> choose_worker
+    worker.get(pid, key)
   end
 
-  def init(db_folder) do
-    File.mkdir_p("#{db_folder}")
-    {:ok, db_folder}
+  def init({db_folder, worker}) do
+    workers = (0..2)
+      |> Enum.into(%{}, fn num ->
+        {:ok, pid} = worker.start(db_folder)
+        {num, {pid, worker}}
+      end)
+
+    {:ok, workers}
   end
 
-  def handle_call({:get, key}, _from, db_folder) do
-    data = case File.read(file_name(db_folder, key)) do
-      {:ok, contents} -> :erlang.binary_to_term(contents)
-      _ -> nil
-    end
-    {:reply, data, db_folder}
+  defp choose_worker(key) do
+    GenServer.call(:tiny_earl_db, {:choose_worker, key})
   end
 
-  def handle_call({:store, key, data}, _from, db_folder) do
-    file_name(db_folder, key)
-    |> File.write!(:erlang.term_to_binary(data))
-
-    {:reply, data, db_folder}
-  end
-
-  defp file_name(db_folder, key) do
-    hash = key |> :erlang.phash2
-    "#{db_folder}/#{hash}"
+  def handle_call({:choose_worker, key}, _from, workers) do
+    worker_key = :erlang.phash2(key, 3)
+    {:reply, Map.get(workers, worker_key), workers}
   end
 end
