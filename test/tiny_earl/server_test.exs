@@ -1,14 +1,11 @@
 defmodule TinyEarl.ServerTest do
   use ExUnit.Case, async: false
+  import TinyEarl.TestCleaner
   alias TinyEarl.{Database, Server}
 
   setup do
     Database.start("./data/test")
-
-    on_exit fn ->
-      File.rm_rf!("./data/test")
-      send(:tiny_earl_db, :stop)
-    end
+    on_exit fn -> cleanup end
   end
 
   test ".add_url adds a shortened link to link domain" do

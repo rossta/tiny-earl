@@ -1,11 +1,11 @@
 defmodule TinyEarl.CacheTest do
   use ExUnit.Case, async: false
+  import TinyEarl.TestCleaner
+
   alias TinyEarl.{Cache, Server, Database}
 
   setup do
-    on_exit fn ->
-      File.rm_rf!("./data/test")
-    end
+    on_exit fn -> cleanup end
   end
 
   test ".server_process returns pid of server by name" do

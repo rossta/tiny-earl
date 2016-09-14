@@ -4,7 +4,7 @@ defmodule TinyEarl.LinkTest do
 
   test "link struct has url, token, uuid" do
     link = %Link{url: "url", token: "token", uuid: 123}
-    %Link{url: url, token: token, uuid: uuid} = link
+    %Link{url: url, token: token, uuid: _uuid} = link
     assert url == "url"
     assert token == "token"
   end
