@@ -1,12 +1,13 @@
 defmodule TinyEarl.Cache do
   use GenServer
-  alias TinyEarl.Server
+  alias TinyEarl.{Server, Database}
 
   def start do
     GenServer.start(__MODULE__, nil)
   end
 
   def init(_) do
+    Database.start("./data/#{Mix.env}")
     {:ok, %{}}
   end
 
@@ -19,7 +20,7 @@ defmodule TinyEarl.Cache do
       {:ok, server} ->
         {:reply, server, servers}
       :error ->
-        {:ok, new_server} = Server.start
+        {:ok, new_server} = Server.start(domain_name)
         {:reply, new_server, Map.put(servers, domain_name, new_server)}
     end
   end
