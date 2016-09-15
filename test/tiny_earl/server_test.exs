@@ -15,4 +15,14 @@ defmodule TinyEarl.ServerTest do
     [link | _rest] = domain.entries |> Map.values
     assert link.url == "http://example.org"
   end
+
+  test ".add_url stores link in database" do
+    {:ok, pid} = Server.start("http://tiny.co")
+    domain = Server.add_url(pid, "http://example.org")
+    Server.stop(pid)
+
+    {:ok, pid} = Server.start("http://tiny.co")
+    [link] = Server.entries(pid) |> Map.values
+    assert link.url == "http://example.org"
+  end
 end
