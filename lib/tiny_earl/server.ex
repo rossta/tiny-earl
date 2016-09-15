@@ -3,7 +3,8 @@ defmodule TinyEarl.Server do
   alias TinyEarl.{Database, LinkDomain}
 
   def start_link(domain_name) do
-    GenServer.start_link(__MODULE__, domain_name)
+    IO.puts "Starting server for #{domain_name}"
+    GenServer.start_link(__MODULE__, domain_name, name: via_tuple(domain_name))
   end
 
   def stop(server) do
@@ -22,6 +23,10 @@ defmodule TinyEarl.Server do
     GenServer.call(server, :entries)
   end
 
+  def whereis(domain_name) do
+    TinyEarl.ProcessRegistry.whereis_name({:tiny_earl_server, domain_name})
+  end
+
   def handle_call({:add_url, url}, _from, {domain_name, link_domain}) do
     link_domain = LinkDomain.add_url(link_domain, url)
     Database.store(domain_name, link_domain)
@@ -30,5 +35,9 @@ defmodule TinyEarl.Server do
 
   def handle_call(:entries, _from, {domain_name, link_domain}) do
     {:reply, LinkDomain.entries(link_domain), {domain_name, link_domain}}
+  end
+
+  defp via_tuple(domain_name) do
+    {:via, TinyEarl.ProcessRegistry, {:tiny_earl_server, domain_name}}
   end
 end

@@ -1,6 +1,6 @@
 defmodule TinyEarl.Cache do
   use GenServer
-  alias TinyEarl.{Server}
+  alias TinyEarl.{Server, ServerSupervisor}
 
   def start_link do
     # IO.puts "Starting tiny-earl cache"
@@ -12,20 +12,26 @@ defmodule TinyEarl.Cache do
   end
 
   def init(_) do
-    {:ok, %{}}
+    {:ok, nil}
   end
 
   def server_process(domain_name) do
-    GenServer.call(:tiny_earl_cache, {:server_process, domain_name})
+    case Server.whereis(domain_name) do
+      :undefined ->
+        GenServer.call(:tiny_earl_cache, {:server_process, domain_name})
+
+      pid -> pid
+    end
   end
 
-  def handle_call({:server_process, domain_name}, _from, servers) do
-    case Map.fetch(servers, domain_name) do
-      {:ok, server} ->
-        {:reply, server, servers}
-      :error ->
-        {:ok, new_server} = Server.start_link(domain_name)
-        {:reply, new_server, Map.put(servers, domain_name, new_server)}
+  def handle_call({:server_process, domain_name}, _from, state) do
+    server_pid = case Server.whereis(domain_name) do
+      :undefined ->
+        {:ok, pid} = ServerSupervisor.start_child(domain_name)
+        pid
+
+      pid -> pid
     end
+    {:reply, server_pid, state}
   end
 end
