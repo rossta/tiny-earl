@@ -1,6 +1,6 @@
 # TinyEarl
 
-**TODO: Add description**
+A process-oriented URL-shortener written in Elixir (work-in-progress).
 
 ## Installation
 
@@ -22,3 +22,10 @@ If [available in Hex](https://hex.pm/docs/publish), the package can be installed
     end
     ```
 
+## Contributing
+
+Bug reports and pull requests are welcome on GitHub at https://github.com/rossta/montrose. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](contributor-covenant.org) code of conduct.
+
+## License
+
+The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
