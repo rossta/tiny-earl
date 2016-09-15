@@ -1,14 +1,17 @@
 defmodule TinyEarl.Cache do
   use GenServer
-  alias TinyEarl.{Server, Database}
+  alias TinyEarl.{Server}
 
   def start_link do
     # IO.puts "Starting tiny-earl cache"
     GenServer.start_link(__MODULE__, nil, name: :tiny_earl_cache)
   end
 
+  def stop do
+    GenServer.stop(:tiny_earl_cache)
+  end
+
   def init(_) do
-    Database.start_link("./data/#{Mix.env}")
     {:ok, %{}}
   end
 
