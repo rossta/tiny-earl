@@ -2,8 +2,12 @@ defmodule TinyEarl.Server do
   use GenServer
   alias TinyEarl.{Database, LinkDomain}
 
-  def start(domain_name) do
-    GenServer.start(__MODULE__, domain_name)
+  def start_link(domain_name) do
+    GenServer.start_link(__MODULE__, domain_name)
+  end
+
+  def stop(server) do
+    GenServer.stop(server)
   end
 
   def init(domain_name) do
@@ -20,6 +24,7 @@ defmodule TinyEarl.Server do
 
   def handle_call({:add_url, url}, _from, {domain_name, link_domain}) do
     link_domain = LinkDomain.add_url(link_domain, url)
+    Database.store(domain_name, link_domain)
     {:reply, link_domain, {domain_name, link_domain}}
   end
 

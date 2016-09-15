@@ -4,11 +4,11 @@
 #   alias TinyEarl.Database
 #
 #   setup do
-#     Database.start({"./data/test", TinyEarl.FakeDatabaseWorker})
+#     Database.start_link({"./data/test", TinyEarl.FakeDatabaseWorker})
 #
 #     on_exit fn ->
 #       cleanup
-#       Database.start("./data/test")
+#       Database.start_link("./data/test")
 #     end
 #   end
 #

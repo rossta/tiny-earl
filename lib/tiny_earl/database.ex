@@ -1,17 +1,16 @@
 defmodule TinyEarl.Database do
   use GenServer
 
-  def start({db_folder, worker}) do
+  def start_link({db_folder, worker}) do
     GenServer.start_link(__MODULE__, {db_folder, worker}, name: :tiny_earl_db)
   end
 
-  def start(db_folder) do
-    start({db_folder, TinyEarl.DatabaseWorker})
+  def start_link(db_folder) do
+    start_link({db_folder, TinyEarl.DatabaseWorker})
   end
 
   def store(key, data) do
     {pid, worker} = key |> choose_worker
-    IO.puts "worker: " <> inspect worker
     worker.store(pid, key, data)
   end
 
@@ -27,7 +26,7 @@ defmodule TinyEarl.Database do
   def init({db_folder, worker}) do
     workers = (0..2)
       |> Enum.into(%{}, fn num ->
-        {:ok, pid} = worker.start(db_folder)
+        {:ok, pid} = worker.start_link(db_folder)
         {num, {pid, worker}}
       end)
 

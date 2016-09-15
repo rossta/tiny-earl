@@ -4,12 +4,12 @@ defmodule TinyEarl.ServerTest do
   alias TinyEarl.{Database, Server}
 
   setup do
-    Database.start("./data/test")
+    Database.start_link("./data/test")
     on_exit fn -> cleanup end
   end
 
   test ".add_url adds a shortened link to link domain" do
-    assert {:ok, pid} = Server.start("http://tiny.co")
+    assert {:ok, pid} = Server.start_link("http://tiny.co")
     domain = Server.add_url(pid, "http://example.org")
     assert domain.entries |> Map.keys |> length == 1
     [link | _rest] = domain.entries |> Map.values
@@ -17,11 +17,11 @@ defmodule TinyEarl.ServerTest do
   end
 
   test ".add_url stores link in database" do
-    {:ok, pid} = Server.start("http://tiny.co")
-    domain = Server.add_url(pid, "http://example.org")
+    {:ok, pid} = Server.start_link("http://tiny.co")
+    Server.add_url(pid, "http://example.org")
     Server.stop(pid)
 
-    {:ok, pid} = Server.start("http://tiny.co")
+    {:ok, pid} = Server.start_link("http://tiny.co")
     [link] = Server.entries(pid) |> Map.values
     assert link.url == "http://example.org"
   end
