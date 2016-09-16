@@ -14,8 +14,8 @@ defmodule TinyEarl.Mixfile do
   #
   # Type "mix help compile.app" for more information
   def application do
-    [applications: [:logger],
-     mod: {TinyEarl, []}]
+    [applications: [:logger, :gproc],
+     mod: {TinyEarl.Application, []}]
   end
 
   # Dependencies can be Hex packages:
@@ -30,6 +30,7 @@ defmodule TinyEarl.Mixfile do
   defp deps do
     [
       { :uuid, "~> 1.1" },
+      { :gproc, "~> 0.6.1" },
       { :mock, ">= 0.0.0", only: :test }
     ]
   end

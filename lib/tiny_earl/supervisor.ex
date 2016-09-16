@@ -3,7 +3,6 @@ defmodule TinyEarl.Supervisor do
 
   def init(_) do
     processes = [
-      worker(TinyEarl.ProcessRegistry, []),
       supervisor(TinyEarl.SystemSupervisor, [])
     ]
     supervise(processes, strategy: :rest_for_one)

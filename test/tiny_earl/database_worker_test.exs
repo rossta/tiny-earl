@@ -2,12 +2,6 @@ defmodule TinyEarl.DatabaseWorkerTest do
   use ExUnit.Case, async: false
   import TinyEarl.TestCleaner
 
-  setup_all do
-    TinyEarl.ProcessRegistry.start_link
-
-    :ok
-  end
-
   setup do
     worker_id = 1
     TinyEarl.DatabaseWorker.start_link("./data/test", worker_id)

@@ -24,7 +24,7 @@ defmodule TinyEarl.Server do
   end
 
   def whereis(domain_name) do
-    TinyEarl.ProcessRegistry.whereis_name({:tiny_earl_server, domain_name})
+    :gproc.whereis_name({:n, :l, {:tiny_earl_server, domain_name}})
   end
 
   def handle_call({:add_url, url}, _from, {domain_name, link_domain}) do
@@ -38,6 +38,6 @@ defmodule TinyEarl.Server do
   end
 
   defp via_tuple(domain_name) do
-    {:via, TinyEarl.ProcessRegistry, {:tiny_earl_server, domain_name}}
+    {:via, :gproc, {:n, :l, {:tiny_earl_server, domain_name}}}
   end
 end

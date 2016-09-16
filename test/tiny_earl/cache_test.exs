@@ -3,18 +3,10 @@ defmodule TinyEarl.CacheTest do
   import Mock
   alias TinyEarl.{Cache, Server}
 
-  setup_all do
-    TinyEarl.ProcessRegistry.start_link
-    TinyEarl.ServerSupervisor.start_link
-
-    :ok
-  end
-
   test ".server_process returns pid of server by name" do
     with_mock TinyEarl.Database, [
       store: fn _, _ -> nil end,
       get: fn _ -> nil end] do
-      {:ok, _cache} = Cache.start_link
       server_pid = Cache.server_process("http://tiny.co")
       repeat_server_pid = Cache.server_process("http://tiny.co")
       another_server_pid = Cache.server_process("http://bit.ly")
@@ -28,7 +20,6 @@ defmodule TinyEarl.CacheTest do
     with_mock TinyEarl.Database, [
       store: fn _, _ -> nil end,
       get: fn _ -> nil end] do
-      {:ok, _cache} = Cache.start_link
       tiny_domain = Cache.server_process("http://tiny.co")
       puny_domain = Cache.server_process("http://puny.ly")
       Server.add_url(tiny_domain, "http://foo.com/123")
