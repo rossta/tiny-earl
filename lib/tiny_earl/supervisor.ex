@@ -4,11 +4,9 @@ defmodule TinyEarl.Supervisor do
   def init(_) do
     processes = [
       worker(TinyEarl.ProcessRegistry, []),
-      worker(TinyEarl.Database, ["./data/#{Mix.env}"]),
-      worker(TinyEarl.ServerSupervisor, []),
-      worker(TinyEarl.Cache, [])
+      supervisor(TinyEarl.SystemSupervisor, [])
     ]
-    supervise(processes, strategy: :one_for_one)
+    supervise(processes, strategy: :rest_for_one)
   end
 
   def start_link do

@@ -6,6 +6,10 @@ defmodule TinyEarl.ProcessRegistry do
     GenServer.start_link(__MODULE__, nil, name: :process_registry)
   end
 
+  def stop do
+    GenServer.stop(:process_registry)
+  end
+
   def init(_) do
     {:ok, %{}}
   end
