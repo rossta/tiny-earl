@@ -3,6 +3,13 @@ defmodule TinyEarl.CacheTest do
   import Mock
   alias TinyEarl.{Cache, Server}
 
+  setup_all do
+    TinyEarl.ProcessRegistry.start_link
+    TinyEarl.ServerSupervisor.start_link
+
+    :ok
+  end
+
   test ".server_process returns pid of server by name" do
     with_mock TinyEarl.Database, [
       store: fn _, _ -> nil end,
