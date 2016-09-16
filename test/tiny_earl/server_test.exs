@@ -3,6 +3,10 @@ defmodule TinyEarl.ServerTest do
   import Mock
   alias TinyEarl.{Server, LinkDomain}
 
+  setup do
+    TinyEarl.ProcessRegistry.start_link(name: :server_test_process_registry)
+  end
+
   test ".add_url adds a shortened link to link domain" do
     with_mock TinyEarl.Database, [
       store: fn _, _ -> nil end,
