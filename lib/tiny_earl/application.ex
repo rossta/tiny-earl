@@ -2,6 +2,9 @@ defmodule TinyEarl.Application do
   use Application
 
   def start(_, _) do
-    TinyEarl.Supervisor.start_link
+    response = TinyEarl.Supervisor.start_link
+    TinyEarl.Web.start_server
+
+    response
   end
 end

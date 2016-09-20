@@ -14,7 +14,7 @@ defmodule TinyEarl.Mixfile do
   #
   # Type "mix help compile.app" for more information
   def application do
-    [applications: [:logger, :gproc],
+    [applications: [:logger, :gproc, :cowboy, :plug],
      mod: {TinyEarl.Application, []}]
   end
 
@@ -31,7 +31,10 @@ defmodule TinyEarl.Mixfile do
     [
       { :uuid, "~> 1.1" },
       { :gproc, "~> 0.6.1" },
-      { :mock, ">= 0.0.0", only: :test }
+      { :cowboy, "~> 1.0.0" },
+      { :plug, "~> 1.0" },
+      { :mock, ">= 0.0.0", only: :test },
+      { :httpoison, "~> 0.9.0", only: :test }
     ]
   end
 end
