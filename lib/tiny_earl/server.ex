@@ -3,7 +3,6 @@ defmodule TinyEarl.Server do
   alias TinyEarl.{Database, LinkDomain}
 
   def start_link(domain_name) do
-    IO.puts "Starting server for #{domain_name}"
     GenServer.start_link(__MODULE__, domain_name, name: via_tuple(domain_name))
   end
 

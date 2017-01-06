@@ -3,7 +3,6 @@ defmodule TinyEarl.Cache do
   alias TinyEarl.{Server, ServerSupervisor}
 
   def start_link do
-    IO.puts "Starting tiny-earl cache"
     GenServer.start_link(__MODULE__, nil, name: :tiny_earl_cache)
   end
 
