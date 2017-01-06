@@ -9,14 +9,21 @@ defmodule TinyEarl.Web do
   end
 
   post "/add_url" do
-    conn
-    |> Plug.Conn.fetch_query_params
-    |> add_url
-    |> respond
+    if conn.params["url"] do
+      conn
+      |> Plug.Conn.put_resp_content_type("text/plain")
+      |> Plug.Conn.fetch_query_params
+      |> add_url
+      |> respond
+    else
+      conn
+      |> Plug.Conn.send_resp(422, "Missing url parameter")
+    end
   end
 
   defp add_url(conn) do
-    conn.params["domain"]
+    conn.params
+    |> Map.get("domain", "http://localhost:5454")
     |> TinyEarl.Cache.server_process
     |> TinyEarl.Server.add_url(conn.params["url"])
     Plug.Conn.assign(conn, :response, "OK")
